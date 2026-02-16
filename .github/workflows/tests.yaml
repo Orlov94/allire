@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'  # Меняем с 8 на 11
+          java-version: '17'
 
       - name: Start Selenoid
         uses: Xotabu4/selenoid-github-action@v2
