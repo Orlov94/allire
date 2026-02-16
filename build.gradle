@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '3.0.1'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+allure {
+    report {//отвечает за появление папкки build/allure-result
+        version.set("2.19.0")
+    }
+    adapter {
+        aspectjWeaver.set(true) //Обработка аннотации @Step
+        frameworks{
+            junit5{ //название фреймворка
+                adapterVersion.set("2.19.0") //версия
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // === ВСЁ ДЛЯ ТЕСТИРОВАНИЯ ===
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    // БЕЗ ЭТОЙ СТРОКИ В GRADLE 8/9 ТЕСТЫ НЕ ЗАПУСТЯТСЯ:
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.10.0'
+    testImplementation 'org.slf4j:slf4j-simple:2.0.9'
+    testImplementation 'com.codeborne:selenide:7.5.1'
+    testImplementation 'io.qameta.allure:allure-selenide:2.19.0'
+}
+
+test {
+    useJUnitPlatform()
+}
