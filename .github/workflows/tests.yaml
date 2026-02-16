@@ -17,11 +17,27 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Update Docker
+      - name: Force reinstall latest Docker
         run: |
+          # Удаляем старые версии Docker
+          sudo apt-get remove -y docker docker-engine docker.io containerd runc || true
+          # Устанавливаем зависимости
           sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+          sudo apt-get install -y ca-certificates curl gnupg lsb-release
+          # Добавляем официальный GPG-ключ Docker
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          # Добавляем репозиторий Docker
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          # Устанавливаем Docker
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+          # Проверяем версию Docker
           docker version
+          docker version | grep -A 5 "Client:"
+          docker version | grep -A 5 "Server:"
 
       - name: Install and start Selenoid
         run: |
