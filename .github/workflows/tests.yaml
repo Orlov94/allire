@@ -1,6 +1,9 @@
 name: Test
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:      # ручной запуск (оставляем)
+  push:                   # автоматический запуск при пуше
+    branches: [ master ]  # или main, если у вас main
 
 jobs:
   test:
