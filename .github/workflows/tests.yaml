@@ -11,11 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
 
       - name: Force reinstall latest Docker
         run: |
@@ -36,8 +36,6 @@ jobs:
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
           # Проверяем версию Docker
           docker version
-          docker version | grep -A 5 "Client:"
-          docker version | grep -A 5 "Server:"
 
       - name: Install and start Selenoid
         run: |
@@ -50,7 +48,7 @@ jobs:
         run: ./gradlew clean test -Dselenide.remote=http://localhost:4444/wd/hub
         continue-on-error: true
 
-      - name: Checkout gh-pages
+      - name: Checkout gh-pages branch
         uses: actions/checkout@v3
         if: always()
         continue-on-error: true
@@ -73,3 +71,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
+          force_orphan: true
